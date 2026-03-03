@@ -2,7 +2,8 @@ const Project = require('../models/project.model');
 const createError = require('http-errors');
 
 module.exports.exists = (req, res, next) => {
-  Project.findById(req.params.id)
+  const projectId = req.params.projectId || req.params.id;
+  Project.findById(projectId)
     .then((project) => {
       if (project) {
         req.project = project;
