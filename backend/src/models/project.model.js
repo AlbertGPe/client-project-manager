@@ -5,7 +5,7 @@ const projectSchema = new Schema(
   {
     name: {
       type: String,
-      required: "Client name is required",
+      required: "Project name is required",
       unique: true,
     },
     description: {
@@ -21,9 +21,9 @@ const projectSchema = new Schema(
       type: Date,
       required: "Start date is required",
     },
-    delivered: {
+    delivery: {
       type: Date,
-      required: "You need to put the delivered date",
+      required: "You need to put the delivery date",
     },
     client: {
       type: mongoose.Schema.Types.ObjectId,
