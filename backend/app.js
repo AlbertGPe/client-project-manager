@@ -9,6 +9,8 @@ const createError = require('http-errors');
 require('./src/config/db.config');
 
 const app = express();
+const cors = require('./src/config/cors.config')
+app.use(cors);
 
 app.use(helmet());
 

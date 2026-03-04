@@ -9,8 +9,8 @@ todo = (req, res, next) => {
 }
 
 router.get('/projects', projects.list) //NEED JWT
-router.get('/projects/:id', projectsMid.exists, projects.detail) //NEED JWT
 router.get('/projects/client/:clientId', todo) //NEED JWT
+router.get('/projects/:id', projectsMid.exists, projects.detail) //NEED JWT
 router.post('/projects', projects.create) //NEED JWT - NEED ADMIN
 router.patch('/projects/:id', projectsMid.exists, projects.update) //NEED JWT - NEED ADMIN
 router.delete('/projects/:id', projectsMid.exists, projects.delete) //NEED JWT - NEED ADMIN

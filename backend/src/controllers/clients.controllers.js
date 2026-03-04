@@ -17,7 +17,7 @@ module.exports.detail = (req, res, next) => res.json(req.client)
 module.exports.delete = (req, res, next) => {
   Client.deleteOne({ _id: req.client.id })
     .then((client) => res.status(204).send())
-    .catch()
+    .catch(next)
 }
 
 module.exports.update = (req, res, next) => {

@@ -25,5 +25,5 @@ module.exports.update = (req, res, next) => {
   Object.assign(req.project, req.body)
   req.project.save()
     .then((project) => res.json(project))
-    .catch()
+    .catch(next)
 }
