@@ -5,6 +5,7 @@ const express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose')
 const createError = require('http-errors');
+const secure = require('./src/middlewares/secure.mid')
 
 require('./src/config/db.config');
 
@@ -16,6 +17,8 @@ app.use(helmet());
 
 app.use(express.json())
 app.use(logger('dev'))
+
+app.use(secure.removeId)
 
 app.use('/api/v1', require('./src/routes/auth.routes.config'))
 app.use('/api/v1', require('./src/routes/client.routes.config'))

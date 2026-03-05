@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const user = require('../controllers/users.controllers')
+const users = require('../controllers/users.controllers')
+const usersMid = require('../middlewares/user.mid')
 
 todo = (req, res, next) => {
   res.send('TODO')
 }
 
-router.post('/auth/register', user.create)
+router.get('/users/:id/confirm', usersMid.exists, users.confirm)
+router.post('/auth/register', users.create)
 router.post('/auth/login', todo)
 
 module.exports = router;
