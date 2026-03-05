@@ -9,6 +9,6 @@ todo = (req, res, next) => {
 
 router.get('/users/:id/confirm', usersMid.exists, users.confirm)
 router.post('/auth/register', users.create)
-router.post('/auth/login', todo)
+router.post('/auth/login', users.login)
 
 module.exports = router;
