@@ -5,14 +5,29 @@ const clients = require('../controllers/clients.controllers');
 const clientsMid = require('../middlewares/client.mid')
 const secureMid = require('../middlewares/secure.mid')
 
-todo = (req, res, next) => {
-  res.send('TODO')
-}
+router.get('/clients',
+  secureMid.auth, 
+  clients.list) //NEED JWT (done)
 
-router.get('/clients', clients.list) //NEED JWT
-router.get('/clients/:id', clientsMid.exists, clients.detail) //NEED JWT
-router.post('/clients', secureMid.auth, clients.create) //NEED JWT - NEED ADMIN
-router.patch('/clients/:id', clientsMid.exists, clients.update) //NEED JWT - NEED ADMIN
-router.delete('/clients/:id', clientsMid.exists, clients.delete) //NEED JWT - NEED ADMIN
+router.get('/clients/:id',
+  secureMid.auth, 
+  clientsMid.exists, 
+  clients.detail) //NEED JWT (done)
+
+router.post('/clients', 
+  secureMid.auth, 
+  clients.create) //NEED JWT (done)
+
+router.patch('/clients/:id', 
+  secureMid.auth, 
+  clientsMid.exists, 
+  clientsMid.checkUser,
+  clients.update) //NEED JWT(done) - NEED OWNER (done)
+
+router.delete('/clients/:id', 
+  secureMid.auth,
+  clientsMid.exists,
+  clientsMid.checkUser, 
+  clients.delete) //NEED JWT(done) - NEED OWNER (done) 
 
 module.exports = router;

@@ -13,3 +13,11 @@ module.exports.exists = (req, res, next) => {
       }
     })
 }
+
+module.exports.checkUser = (req, res, next) => {
+  if (req.client.user.toString() !== req.user.id) {
+    next(createError(403, "Forbidden"))
+  } else {
+    next();
+  }
+}
