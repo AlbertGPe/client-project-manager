@@ -1,0 +1,444 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --bg-dark:       #0a0b0f;
+  --bg-panel:      #0f1117;
+  --bg-input:      transparent;
+  --accent:        #c8a96e;      /* warm gold — premium feel */
+  --accent-soft:   rgba(200, 169, 110, 0.15);
+  --accent-glow:   rgba(200, 169, 110, 0.35);
+  --text-primary:  #eeeae3;
+  --text-muted:    #5a5f72;
+  --text-label:    #8a8fa3;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-input:  rgba(255, 255, 255, 0.12);
+  --error:         #e07070;
+  --panel-width:   50%;
+}
+
+/* ── Page Reset & Base ─────────────────────────────────────── */
+.register-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL — Decorative geometric side ────────────────── */
+.register-left {
+  position: relative;
+  width: var(--panel-width);
+  background-color: #080a10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 3.5rem;
+  overflow: hidden;
+
+  /* Subtle diagonal border on the right edge */
+  border-right: 1px solid var(--border-subtle);
+}
+
+/* Brand / logo area */
+.register-brand {
+  position: relative;
+  z-index: 2;
+  animation: fadeSlideUp 0.8s ease both;
+}
+
+.register-brand-tag {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.register-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+}
+
+.register-headline em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.register-tagline {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-label);
+  line-height: 1.7;
+  max-width: 340px;
+  animation: fadeSlideUp 0.8s 0.15s ease both;
+}
+
+/* Geometric decorations — pure CSS, no images */
+.geo-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Large rotated square */
+.geo-grid::before {
+  content: '';
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border: 1px solid rgba(200, 169, 110, 0.08);
+  border-radius: 4px;
+  top: 50%;
+  right: -180px;
+  transform: translateY(-50%) rotate(20deg);
+  animation: rotateSlow 40s linear infinite;
+}
+
+/* Smaller inner square */
+.geo-grid::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(200, 169, 110, 0.12);
+  border-radius: 4px;
+  top: 50%;
+  right: -80px;
+  transform: translateY(-50%) rotate(20deg);
+  animation: rotateSlow 30s linear infinite reverse;
+}
+
+/* Stats / feature pills at the bottom */
+.register-stats {
+  position: relative;
+  z-index: 2;
+  margin-top: 4rem;
+  display: flex;
+  gap: 2rem;
+  animation: fadeSlideUp 0.8s 0.3s ease both;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Horizontal divider between stats */
+.stat-divider {
+  width: 1px;
+  background: var(--border-subtle);
+  align-self: stretch;
+}
+
+/* Bottom corner accent dot */
+.corner-accent {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 3.5rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* ── RIGHT PANEL — Form side ───────────────────────────────── */
+.register-right {
+  width: var(--panel-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 3rem;
+  background-color: var(--bg-panel);
+  position: relative;
+}
+
+.register-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Form header */
+.form-header {
+  margin-bottom: 3rem;
+  animation: fadeSlideUp 0.6s 0.2s ease both;
+}
+
+.form-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.form-header p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ── Form fields ───────────────────────────────────────────── */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Each field is a floating-label group */
+.field-group {
+  position: relative;
+  animation: fadeSlideUp 0.6s ease both;
+}
+
+/* Staggered animation per field */
+.field-group:nth-child(1) { animation-delay: 0.25s; }
+.field-group:nth-child(2) { animation-delay: 0.35s; }
+.field-group:nth-child(3) { animation-delay: 0.45s; }
+.field-group:nth-child(4) { animation-delay: 0.55s; }
+
+.field-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition: color 0.2s ease;
+  /* We'll use unicode/text icons for zero-dependency */
+  width: 20px;
+  text-align: center;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.field-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-input);
+  padding: 0.75rem 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.25s ease;
+  box-sizing: border-box;
+
+  /* Remove browser autocomplete styles */
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--accent);
+}
+
+.field-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* The animated underline that grows from left on focus */
+.field-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.field-input:focus ~ .field-underline {
+  width: 100%;
+}
+
+/* Focus state: label color change */
+.field-group:focus-within .field-label {
+  color: var(--accent);
+}
+
+/* Error state */
+.field-input.is-invalid {
+  border-bottom-color: var(--error);
+}
+
+.field-input.is-invalid ~ .field-underline {
+  background: var(--error);
+  box-shadow: none;
+  width: 100%;
+}
+
+.field-error {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.75rem;
+  color: var(--error);
+  font-weight: 400;
+}
+
+/* Server-level error banner — same red palette, styled to match the form */
+.server-error {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(224, 112, 112, 0.25); /* --error at low opacity */
+  border-left: 2px solid var(--error);          /* stronger left accent */
+  background: rgba(224, 112, 112, 0.06);        /* very subtle red wash */
+  border-radius: 2px;
+  font-size: 0.8rem;
+  color: var(--error);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  animation: fadeSlideUp 0.3s ease both;        /* reuses existing keyframe */
+}
+
+/* ── Submit Button ─────────────────────────────────────────── */
+.btn-register {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.35s ease;
+  animation: fadeSlideUp 0.6s 0.6s ease both;
+}
+
+/* Fill sweep on hover */
+.btn-register::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.btn-register:hover::before {
+  transform: translateX(0);
+}
+
+.btn-register:hover {
+  color: var(--bg-dark);
+}
+
+.btn-register span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Login redirect link ───────────────────────────────────── */
+.register-footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  animation: fadeSlideUp 0.6s 0.7s ease both;
+}
+
+.register-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.register-footer a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ── Keyframes ─────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotateSlow {
+  from { transform: translateY(-50%) rotate(20deg); }
+  to   { transform: translateY(-50%) rotate(380deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 20px var(--accent-glow); }
+  50%       { opacity: 0.4; box-shadow: 0 0 6px var(--accent-glow); }
+}
+
+/* ── Responsive — stack vertically on mobile ───────────────── */
+@media (max-width: 768px) {
+  .register-page {
+    flex-direction: column;
+  }
+
+  .register-left {
+    width: 100%;
+    min-height: 260px;
+    padding: 3rem 2rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .register-stats {
+    margin-top: 2rem;
+  }
+
+  .register-right {
+    width: 100%;
+    padding: 3rem 2rem;
+  }
+}
