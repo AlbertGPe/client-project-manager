@@ -7,6 +7,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: "User name is required",
+      unique: true,
       minlength: [3, "User name needs at least 3 characters"],
     },
     email: {
@@ -17,8 +18,8 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: "Student password is required",
-      minlength: [8, "Student password needs at least 8 chars"],
+      required: "User password is required",
+      minlength: [8, "User password needs at least 8 chars"],
       match: [/^(?=.*[A-Z])(?=.*\d).{8,}$/, "Password must contain numbers and Mayus"]
     },
     confirm: { //TODO EMAIL CONFIRMATION EXPIRATION
@@ -47,6 +48,10 @@ const userSchema = new Schema(
 
 userSchema.pre('save', async function () {
   const user = this;
+
+  if (user.email) {
+    user.email = user.email.toLowerCase();
+  }
 
   if (user.isModified('password')) {
     try {

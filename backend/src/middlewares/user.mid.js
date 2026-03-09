@@ -9,7 +9,7 @@ module.exports.exists = (req, res, next) => {
         req.user = user;
         next();
       } else {
-        next(createError(404, 'Client not found'))
+        next(createError(404, 'User not found'))
       }
     })
 }
