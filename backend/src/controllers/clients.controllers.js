@@ -3,7 +3,10 @@ const createError = require("http-errors");
 
 module.exports.list = (req, res, next) => {
   Client.find()
-    .then((clients) => res.json(clients))
+    .then((clients) => {
+      res.json(clients)
+      console.log(clients[0].projects)
+    })
     .catch(next);
 };
 

@@ -30,6 +30,10 @@ const projectSchema = new Schema(
       ref: "Client",
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }
   },
   {
     timestamps: true,

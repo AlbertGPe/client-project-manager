@@ -10,7 +10,7 @@ todo = (req, res, next) => {
 }
 
 router.get('/projects',
-  secureMid.auth, 
+  //secureMid.auth, 
   projects.list) //NEED JWT (done)
 
 router.get('/projects/client/:clientId', 

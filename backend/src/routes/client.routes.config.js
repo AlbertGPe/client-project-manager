@@ -6,8 +6,8 @@ const clientsMid = require('../middlewares/client.mid')
 const secureMid = require('../middlewares/secure.mid')
 
 router.get('/clients',
-  secureMid.auth, 
-  clients.list) //NEED JWT (done)
+  //secureMid.auth, 
+  clients.list) //NEED JWT
 
 router.get('/clients/:id',
   secureMid.auth, 
