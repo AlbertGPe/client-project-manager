@@ -2,10 +2,10 @@ import { Route, Routes } from "react-router-dom";
 import ProjectsList from "./components/projects/projects-list/ProjectsList";
 import HomePage from "./pages/HomePage";
 import ClientsList from "./components/clients/clients-list/ClientsList";
-import UsersRegister from "./components/users/users-register/UsersRegister";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
-import UsersLogin from "./components/users/users-login/UsersLogin";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 
 function App() {
@@ -19,9 +19,8 @@ function App() {
       </Route>
 
       <Route element={<AuthLayout />}>
-        <Route path="/auth/register" element={<UsersRegister />} />
-        <Route path="/auth/login" element={<UsersLogin />} />
-
+        <Route path="/auth/register" element={<RegisterPage />} />
+        <Route path="/auth/login" element={<LoginPage />} />
       </Route>
 
     </Routes>

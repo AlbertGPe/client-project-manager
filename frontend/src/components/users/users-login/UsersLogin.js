@@ -1,10 +1,12 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import './UsersLogin.css'
 
 function UsersLogin() {
   const { register, handleSubmit, formState: { errors } } = useForm({ mode: 'onBlur' })
+  const location = useLocation();
+  const successMessage = location.state?.message;
 
   const onLoginSubmit = (credentials) => {
     // TODO: connect to auth API)
@@ -51,6 +53,13 @@ function UsersLogin() {
       <div className="register-right">
         <div className="register-form-wrapper">
 
+         {/* Message if user has just registered */}
+        {successMessage && (
+          <div className="success-message">
+            ✅ {successMessage}
+          </div>
+        )}
+
           <div className="form-header">
             <h2>Sign in to your account</h2>
             <p>Enter your credentials to access your workspace.</p>
@@ -63,7 +72,7 @@ function UsersLogin() {
               <label className="field-label" htmlFor="email">Email address</label>
               <input
                 id="email"
-                type="text"
+                type="email"
                 placeholder=""
                 className={`field-input ${errors.email ? 'is-invalid' : ''}`}
                 {...register('email', {

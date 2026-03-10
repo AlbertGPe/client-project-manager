@@ -12,8 +12,13 @@ function UsersRegister() {
   const onUserSubmit = async (user) => {
     try{
       setServerError(undefined);
-      user = await usersService.create(user);
-      navigate('/auth/login', { state: { user } })
+      await usersService.create(user);
+      navigate('/auth/login', { 
+        state:{
+          message: 'Registration successful! Please confirm your email to log in.',
+          email: user.email
+        }
+       })
     } catch (error) {
       const errors = error.response?.data?.errors;
       if (errors) {
