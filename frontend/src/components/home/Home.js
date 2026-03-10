@@ -66,49 +66,6 @@ const QUICK_ACTIONS = [
   { id: "new-project", label: "Create project", icon: "◉", to: "/projects" },
 ];
 
-const TOP_CLIENTS = [
-  {
-    id: 1,
-    initials: "TS",
-    name: "Tech Solutions SL",
-    company: "Software & Consulting",
-    status: "active",
-    projects: 6,
-  },
-  {
-    id: 2,
-    initials: "AM",
-    name: "Arkadia Media",
-    company: "Creative Agency",
-    status: "active",
-    projects: 4,
-  },
-  {
-    id: 3,
-    initials: "NV",
-    name: "Nova Ventures",
-    company: "Investment Group",
-    status: "pending",
-    projects: 2,
-  },
-  {
-    id: 4,
-    initials: "PL",
-    name: "Pulse Labs",
-    company: "Biotech Startup",
-    status: "active",
-    projects: 5,
-  },
-  {
-    id: 5,
-    initials: "EG",
-    name: "Evergreen Group",
-    company: "Real Estate",
-    status: "inactive",
-    projects: 1,
-  },
-];
-
 const now = new Date();
 const DAY = now.getDate();
 const MONTH = now.toLocaleString("en-GB", { month: "long" });
@@ -121,6 +78,24 @@ function getGreeting() {
   return "Good evening";
 }
 
+function getInitials(name) {
+  if (!name) return '??';
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
+function getClientStatus(client) {
+  const projectCount = client.projects || 0;
+
+  if (projectCount === 0) return 'inactive';
+  if (projectCount >= 2) return 'active';
+  return 'pending';
+}
+
 function HomePage() {
   const [clients, setClients] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -129,6 +104,7 @@ function HomePage() {
     clientService
       .list()
       .then((clients) => {
+        console.log('Clients received:', clients);
         setClients(clients);
       })
       .catch((error) => console.error(error));
@@ -142,15 +118,16 @@ function HomePage() {
 
   let pending = 0;
   let completed = 0;
-  projects.map((project) => {
+  projects.forEach((project) => {
     if (project.state === 'pending') {
       pending += 1;
     } else if (project.state === 'completed') {
       completed += 1;
     }
-    return null
   })
   
+  const topClients = clients.sort((a, b) => (b.projects || 0) - (a.projects || 0)).slice(0, 5);
+
   const KPI_DATA = [
     {
       id: "clients",
@@ -184,7 +161,7 @@ function HomePage() {
     },
     {
       id: "completed",
-      title: "Completed Projects",
+      title: "Projects Completed",
       value: completed,
       icon: "◈",
       delta: "-2",
@@ -283,27 +260,41 @@ function HomePage() {
             </tr>
           </thead>
           <tbody>
-            {TOP_CLIENTS.map((client) => (
-              <tr key={client.id}>
-                <td>
-                  <div className="client-cell">
-                    <div className="client-avatar">{client.initials}</div>
-                    <div>
-                      <div className="client-name">{client.name}</div>
-                      <div className="client-company">{client.company}</div>
+           {topClients.length > 0 ? (
+              topClients.map((client) => (
+                <tr key={client.id}>
+                  <td>
+                    <div className="client-cell">
+                      <div className="client-avatar">
+                        {getInitials(client.name)}
+                      </div>
+                      <div>
+                        <div className="client-name">{client.name}</div>
+                        <div className="client-company">
+                          {client.company || 'No company'}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <span className={`status-badge ${client.status}`}>
-                    {client.status}
-                  </span>
-                </td>
-                <td>
-                  <span className="projects-count">{client.projects}</span>
+                  </td>
+                  <td>
+                    <span className={`status-badge ${getClientStatus(client)}`}>
+                      {getClientStatus(client)}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="projects-count">
+                      {client.projects || 0}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" style={{ textAlign: 'center', padding: '2rem' }}>
+                  No clients yet. Add your first client to get started!
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
