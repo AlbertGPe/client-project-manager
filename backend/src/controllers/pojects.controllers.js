@@ -3,6 +3,7 @@ const Client = require("../models/client.model");
 
 module.exports.list = (req, res, next) => {
   Project.find()
+    .populate('client', 'name company')
     .then((projects) => res.json(projects))
     .catch(next);
 };
@@ -31,6 +32,7 @@ module.exports.update = (req, res, next) => {
 
 module.exports.listByClient = (req, res, next) => {
   Project.find({ client: req.params.clientId} )
+    .populate('client', 'name company')
     .then((projects) => res.json(projects))
     .catch(next)
 }
