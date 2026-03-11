@@ -95,12 +95,12 @@ function HomePage() {
   }, []);
 
   let pending = 0;
-  let completed = 0;
+  let active = 0;
   projects.forEach((project) => {
     if (project.state === 'pending') {
       pending += 1;
-    } else if (project.state === 'completed') {
-      completed += 1;
+    } else if (project.state === 'active') {
+      active += 1;
     }
   })
   
@@ -130,11 +130,11 @@ function HomePage() {
       color: "orange",
     },
     {
-      id: "completed",
-      title: "Projects Completed",
-      value: completed,
+      id: "active",
+      title: "Active Projects",
+      value: active,
       icon: "◈",
-      color: "orange",
+      color: "blue",
     },
   ];
 
