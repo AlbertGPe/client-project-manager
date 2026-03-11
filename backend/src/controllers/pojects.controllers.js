@@ -28,3 +28,9 @@ module.exports.update = (req, res, next) => {
     .then((project) => res.json(project))
     .catch(next)
 };
+
+module.exports.listByClient = (req, res, next) => {
+  Project.find({ client: req.params.clientId} )
+    .then((projects) => res.json(projects))
+    .catch(next)
+}
