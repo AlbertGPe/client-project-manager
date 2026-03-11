@@ -6,6 +6,7 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import CreateClientPage from "./pages/CreateClientPage";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/projects" element={<ProjectsList />} />
         <Route path="/clients" element={<ClientsList />} />
+        <Route path="/clients/new" element={<CreateClientPage />} />
       </Route>
 
       <Route element={<AuthLayout />}>

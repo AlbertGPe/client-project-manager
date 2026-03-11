@@ -49,11 +49,9 @@ function UsersLogin() {
         <div className="corner-accent" />
       </div>
 
-      {/* ── RIGHT PANEL — Login form ─────────────────────────────── */}
       <div className="register-right">
         <div className="register-form-wrapper">
 
-         {/* Message if user has just registered */}
         {successMessage && (
           <div className="success-message">
             ✅ {successMessage}
@@ -67,7 +65,6 @@ function UsersLogin() {
 
           <form className="register-form" onSubmit={handleSubmit(onLoginSubmit)}>
 
-            {/* Email field — identical pattern to register */}
             <div className="field-group">
               <label className="field-label" htmlFor="email">Email address</label>
               <input
@@ -89,7 +86,6 @@ function UsersLogin() {
               )}
             </div>
 
-            {/* Password field */}
             <div className="field-group">
               <label className="field-label" htmlFor="password">Password</label>
               <input

@@ -4,66 +4,9 @@ import "./Home.css";
 import clientService from "../../services/clients";
 import projectService from '../../services/projects'
 
-// ── Mock data — replace with real API calls once backend is ready ──────────
-
-const ACTIVITY = [
-  {
-    id: 1,
-    dot: "green",
-    text: (
-      <>
-        <strong>Marta Sánchez</strong> was added as a new client.
-      </>
-    ),
-    time: "2 minutes ago",
-  },
-  {
-    id: 2,
-    dot: "gold",
-    text: (
-      <>
-        Project <strong>Brand Redesign</strong> moved to{" "}
-        <strong>In Review</strong>.
-      </>
-    ),
-    time: "1 hour ago",
-  },
-  {
-    id: 3,
-    dot: "blue",
-    text: (
-      <>
-        <strong>Tech Solutions SL</strong> updated their contact information.
-      </>
-    ),
-    time: "3 hours ago",
-  },
-  {
-    id: 4,
-    dot: "orange",
-    text: (
-      <>
-        Deadline approaching: <strong>API Integration</strong> is due in 2 days.
-      </>
-    ),
-    time: "Yesterday, 18:40",
-  },
-  {
-    id: 5,
-    dot: "green",
-    text: (
-      <>
-        Project <strong>Mobile App v2</strong> marked as{" "}
-        <strong>Completed</strong>.
-      </>
-    ),
-    time: "Yesterday, 11:15",
-  },
-];
-
 const QUICK_ACTIONS = [
-  { id: "new-client", label: "Add new client", icon: "◈", to: "/clients" },
-  { id: "new-project", label: "Create project", icon: "◉", to: "/projects" },
+  { id: "new-client", label: "Add new client", icon: "◈", to: "/clients/new" },
+  { id: "new-project", label: "Create project", icon: "◉", to: "/projects" }, //TODO CREATE PAGE PROJECT
 ];
 
 const now = new Date();
@@ -94,6 +37,41 @@ function getClientStatus(client) {
   if (projectCount === 0) return 'inactive';
   if (projectCount >= 2) return 'active';
   return 'pending';
+}
+
+function getRelativeTime(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+  
+  if (diffInSeconds < 60) {
+    return 'Just now';
+  }
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays === 1) {
+    return 'Yesterday';
+  }
+  if (diffInDays < 7) {
+    return `${diffInDays} days ago`;
+  }
+  
+  //IF MORE THAN 1 WEEK
+  return date.toLocaleDateString('en-GB', { 
+    day: 'numeric', 
+    month: 'short',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+  });
 }
 
 function HomePage() {
@@ -127,6 +105,7 @@ function HomePage() {
   })
   
   const topClients = clients.sort((a, b) => (b.projects || 0) - (a.projects || 0)).slice(0, 5);
+  const recentClients = clients.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
 
   const KPI_DATA = [
     {
@@ -134,9 +113,6 @@ function HomePage() {
       title: "Total Clients",
       value: clients.length,
       icon: "◈",
-      delta: "+3",
-      deltaType: "up",
-      deltaLabel: "this month",
       color: "gold",
     },
     {
@@ -144,9 +120,6 @@ function HomePage() {
       title: "Active Projects",
       value: projects.length,
       icon: "◉",
-      delta: "+5",
-      deltaType: "up",
-      deltaLabel: "vs last month",
       color: "green",
     },
     {
@@ -154,9 +127,6 @@ function HomePage() {
       title: "Pending Projects",
       value: pending,
       icon: "◷",
-      delta: "-2",
-      deltaType: "down",
-      deltaLabel: "since yesterday",
       color: "orange",
     },
     {
@@ -164,9 +134,6 @@ function HomePage() {
       title: "Projects Completed",
       value: completed,
       icon: "◈",
-      delta: "-2",
-      deltaType: "down",
-      deltaLabel: "since yesterday",
       color: "orange",
     },
   ];
@@ -199,12 +166,6 @@ function HomePage() {
               <span className="kpi-icon">{kpi.icon}</span>
             </div>
             <div className="kpi-value">{kpi.value}</div>
-            <div className="kpi-footer">
-              <span className={`kpi-delta ${kpi.deltaType}`}>
-                {kpi.deltaType === "up" ? "↑" : "↓"} {kpi.delta}
-              </span>
-              <span className="kpi-delta-label">{kpi.deltaLabel}</span>
-            </div>
           </div>
         ))}
       </div>
@@ -213,19 +174,33 @@ function HomePage() {
       <div className="home-grid">
         <div className="panel activity-panel">
           <div className="panel-header">
-            <h2 className="panel-title">Recent activity</h2>
-            <button className="panel-action">View all</button>
+            <h2 className="panel-title">Latest new clients</h2>
           </div>
           <ul className="activity-list">
-            {ACTIVITY.map((item) => (
-              <li key={item.id} className="activity-item">
-                <span className={`activity-dot ${item.dot}`} />
+           {recentClients.length > 0 ? (
+              recentClients.map((client) => (
+                <li key={client.id} className="activity-item">
+                  <span className="activity-dot green" />
+                  <div className="activity-content">
+                    <p className="activity-text">
+                      <strong>{client.name}</strong> was added as a new client.
+                    </p>
+                    <span className="activity-time">
+                      {getRelativeTime(client.createdAt)}
+                    </span>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li className="activity-item">
+                <span className="activity-dot blue" />
                 <div className="activity-content">
-                  <p className="activity-text">{item.text}</p>
-                  <span className="activity-time">{item.time}</span>
+                  <p className="activity-text">
+                    No recent activity yet.
+                  </p>
                 </div>
               </li>
-            ))}
+            )}
           </ul>
         </div>
 
@@ -297,19 +272,6 @@ function HomePage() {
             )}
           </tbody>
         </table>
-      </div>
-
-      <div className="quote-banner">
-        <p className="quote-text">
-          "The secret of getting ahead is getting started.
-          <span>
-            {" "}
-            The secret of getting started is breaking your complex, overwhelming
-            tasks into small manageable tasks.
-          </span>
-          "
-        </p>
-        <span className="quote-author">Mark Twain</span>
       </div>
     </div>
   );
