@@ -30,6 +30,7 @@ const clientSchema = new Schema({
 },{
   timestamps: true,
     toJSON: {
+      virtuals: true,
       transform: function (doc, ret) {
         delete ret.__v;
         ret.id = ret._id;
@@ -37,6 +38,13 @@ const clientSchema = new Schema({
         return ret;
       },
     },
+});
+
+clientSchema.virtual('projects', {
+  ref: 'Project',       
+  localField: '_id',      
+  foreignField: 'client',
+  count: true
 });
 
 const Client = mongoose.model("Client", clientSchema);
