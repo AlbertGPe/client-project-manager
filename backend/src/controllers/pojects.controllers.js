@@ -26,6 +26,7 @@ module.exports.delete = (req, res, next) => {
 module.exports.update = (req, res, next) => {
   Object.assign(req.project, req.body)
   req.project.save()
+    .then((project) => project.populate('client', 'name company'))
     .then((project) => res.json(project))
     .catch(next)
 };
