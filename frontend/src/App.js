@@ -8,6 +8,7 @@ import CreateClientPage from "./pages/CreateClientPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ClientsPage from "./pages/ClientsPage";
 import ClientDetailPage from "./pages/ClientDetailPage";
+import ProjectDetailPage from "./pages/ProjectDetailPage";
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
         <Route path="/clients" element={<ClientsPage />} />
         <Route path="/clients/new" element={<CreateClientPage />} />
         <Route path="/clients/:id" element={<ClientDetailPage />} />
+        <Route path="/projects/:id" element={<ProjectDetailPage />} />
+
       </Route>
 
       <Route element={<AuthLayout />}>
