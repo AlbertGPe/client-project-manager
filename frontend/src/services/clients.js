@@ -9,10 +9,14 @@ const create = (client) => http.post('/clients', client).then((res) => res.data)
 const update = (id, client) =>
   http.patch(`/clients/${id}`, client).then((res) => res.data);
 
+const remove = (id) => http.delete(`/clients/${id}`)
+
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   list,
   getOne,
   update,
-  create
+  create,
+  delete: remove,
 };

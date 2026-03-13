@@ -6,7 +6,7 @@ import projectService from '../../services/projects'
 
 const QUICK_ACTIONS = [
   { id: "new-client", label: "Add new client", icon: "◈", to: "/clients/new" },
-  { id: "new-project", label: "Create project", icon: "◉", to: "/projects" }, //TODO CREATE PAGE PROJECT
+  { id: "new-project", label: "Create project", icon: "◉", to: "/projects/new" },
 ];
 
 const now = new Date();

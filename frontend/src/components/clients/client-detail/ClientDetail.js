@@ -31,7 +31,7 @@ const STATE_DOT = {
 
 function ClientDetail() {
   const { id } = useParams();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [client, setClient] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -43,6 +43,8 @@ function ClientDetail() {
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [notesLen, setNotesLen] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Auth: get the current user
   const currentUserId = null; // TODO: replace with auth user id
@@ -65,8 +67,8 @@ function ClientDetail() {
 
   useEffect(() => {
     Promise.all([
-      clientService.getOne(id),
-      projectService.listByClient(id),
+      clientService.getOne(id), 
+      projectService.listByClient(id)
     ])
       .then(([clientData, projectsData]) => {
         setClient(clientData);
@@ -91,6 +93,18 @@ function ClientDetail() {
     currentUserId && ownerId
       ? String(ownerId) === String(currentUserId)
       : false;
+
+    async function handleDelete() {
+    setDeleting(true);
+    try {
+      await clientService.delete(id);
+      navigate("/clients");
+    } catch (error) {
+      setServerError(error.message ?? "Could not delete the client.");
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }
 
   function handleEditClick() {
     setServerError(null);
@@ -180,13 +194,13 @@ function ClientDetail() {
         </div>
 
         <div className="detail-actions">
-          {!isEditing && isOwner && (
+          {!isEditing  && (
             <button className="btn-edit" onClick={handleEditClick}>
               <span>✎ Edit client</span>
             </button>
           )}
 
-          {!isEditing && !isOwner  && currentUserId && (
+          {!isEditing && !isOwner && currentUserId && (
             <div className="ownership-notice">
               🔒 Only the creator can edit this client
             </div>
@@ -194,6 +208,13 @@ function ClientDetail() {
 
           {isEditing && (
             <>
+              <button
+                className="btn-delete"
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={saving || deleting}
+              >
+                <span>✕ Delete</span>
+              </button>
               <button
                 className="btn-cancel"
                 onClick={handleCancel}
@@ -212,6 +233,35 @@ function ClientDetail() {
           )}
         </div>
       </header>
+
+      {showDeleteConfirm && (
+        <div className="delete-modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-modal-icon">✕</div>
+            <h3 className="delete-modal-title">Delete client?</h3>
+            <p className="delete-modal-body">
+              <strong>{client.name}</strong> and all associated data will be
+              permanently deleted. This action cannot be undone.
+            </p>
+            <div className="delete-modal-actions">
+              <button
+                className="btn-delete-confirm"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting…" : "Yes, delete"}
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="detail-body">
         <div className="detail-panel">
@@ -391,13 +441,13 @@ function ClientDetail() {
               <span className="detail-projects-count">{projects.length}</span>
             )}
             {isEditing && (
-                <Link
-                  to={`/projects/new?client=${id}`}
-                  className="btn-new-project-inline"
-                >
-                  + New project
-                </Link>
-              )}
+              <Link
+                to={`/projects/new?client=${id}`}
+                className="btn-new-project-inline"
+              >
+                + New project
+              </Link>
+            )}
           </div>
           {projects.length === 0 ? (
             <p className="detail-projects-empty">

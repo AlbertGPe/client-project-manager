@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import projectService from "../../../services/projects";
 import "./ProjectDetail.css";
@@ -46,6 +46,7 @@ const ALL_STATES = ["pending", "active", "completed"];
 
 function ProjectDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,8 @@ function ProjectDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [selectedState, setSelectedState] = useState("pending");
   const [descLen, setDescLen] = useState(0);
@@ -102,6 +105,18 @@ function ProjectDetail() {
     currentUserId && ownerId
       ? String(ownerId) === String(currentUserId)
       : false;
+
+  async function handleDelete() {
+    setDeleting(true);
+    try {
+      await projectService.delete(id);
+      navigate("/projects");
+    } catch (error) {
+      setServerError(error.message ?? "Could not delete the project.");
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  }
 
   function handleEditClick() {
     setServerError(null);
@@ -212,6 +227,13 @@ function ProjectDetail() {
           {isEditing && (
             <>
               <button
+                className="btn-delete"
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={saving || deleting}
+              >
+                <span>✕ Delete</span>
+              </button>
+              <button
                 className="btn-cancel"
                 onClick={handleCancel}
                 disabled={saving}
@@ -229,6 +251,38 @@ function ProjectDetail() {
           )}
         </div>
       </header>
+
+      {showDeleteConfirm && (
+        <div
+          className="delete-modal-overlay"
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-modal-icon">✕</div>
+            <h3 className="delete-modal-title">Delete project?</h3>
+            <p className="delete-modal-body">
+              <strong>{project.name}</strong> will be permanently deleted. This
+              action cannot be undone.
+            </p>
+            <div className="delete-modal-actions">
+              <button
+                className="btn-delete-confirm"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting…" : "Yes, delete"}
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="detail-body">
         <div className="detail-panel">

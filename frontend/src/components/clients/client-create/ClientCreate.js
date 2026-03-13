@@ -18,7 +18,6 @@ function ClientCreate() {
 
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState(null);
-  const [notesLen, setNotesLen] = useState(0);
 
   const {
     register,
