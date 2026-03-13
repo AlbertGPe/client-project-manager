@@ -197,7 +197,7 @@ function ProjectDetail() {
         </div>
 
         <div className="detail-actions">
-          {!isEditing && (
+          {!isEditing && isOwner && (
             <button className="btn-edit" onClick={handleEditClick}>
               <span>✎ Edit project</span>
             </button>

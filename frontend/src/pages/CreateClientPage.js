@@ -1,10 +1,10 @@
 import React from 'react'
-import ClientRegister from '../components/clients/client-register/ClientRegister'
+import ClientCreate from '../components/clients/client-create/ClientCreate'
 
 function CreateClientPage() {
   return (
     <>
-      <ClientRegister />
+      <ClientCreate />
     </>
   )
 }

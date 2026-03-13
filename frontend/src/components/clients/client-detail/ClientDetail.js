@@ -390,8 +390,15 @@ function ClientDetail() {
             {projects.length > 0 && (
               <span className="detail-projects-count">{projects.length}</span>
             )}
+            {isEditing && (
+                <Link
+                  to={`/projects/new?client=${id}`}
+                  className="btn-new-project-inline"
+                >
+                  + New project
+                </Link>
+              )}
           </div>
-
           {projects.length === 0 ? (
             <p className="detail-projects-empty">
               No projects linked to this client yet.

@@ -1,7 +1,7 @@
-import http from './base-api';
+import http from "./base-api";
 
-const create = (user) => http.post('/auth/register', user)
+const create = (user) => http.post("/auth/register", user);
 
 export default {
-  create
-}
+  create,
+};
