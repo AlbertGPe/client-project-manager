@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import clientService from "../../../services/clients";
 import projectService from "../../../services/projects";
+import { AuthContext } from "../../../contexts/AuthStore";
 import "./ProjectCreate.css";
 
 const STATE_LABELS = {
@@ -28,6 +29,9 @@ function ProjectCreate() {
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [descLen, setDescLen] = useState(0);
+
+  const { user } = useContext(AuthContext);
+  const currentUserId = user?.id ?? null;
 
   const {
     register,
@@ -58,7 +62,6 @@ function ProjectCreate() {
     clientService
       .getOne(selectedClientId)
       .then((client) => {
-        const currentUserId = "69b0032837853eefcffdfd62"; // TODO: auth context
         const allowed = String(client.user) === currentUserId;
         setOwnershipStatus(allowed ? "allowed" : "forbidden");
       })

@@ -12,6 +12,7 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
+  req.body.user = req.user?.id
   Client.create(req.body)
     .then((client) => res.status(201).json(client))
     .catch(next);
@@ -20,8 +21,8 @@ module.exports.create = (req, res, next) => {
 module.exports.detail = (req, res, next) => res.json(req.client);
 
 module.exports.delete = (req, res, next) => {
-  Client.deleteOne({ _id: req.client.id })
-    .then((client) => res.status(204).send())
+  req.client.deleteOne()
+    .then(() => res.status(204).send())
     .catch(next);
 };
 

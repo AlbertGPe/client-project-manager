@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import projectService from "../../../services/projects";
+import { AuthContext } from "../../../contexts/AuthStore";
 import "./ProjectDetail.css";
 
 function formatDate(isoString) {
@@ -62,8 +63,8 @@ function ProjectDetail() {
   const [selectedState, setSelectedState] = useState("pending");
   const [descLen, setDescLen] = useState(0);
 
-  // Auth — replace with useAuth() hook once auth is wired up
-  const currentUserId = null; // TODO: replace with auth user id
+  const { user } = useContext(AuthContext);
+  const currentUserId = user?.id ?? null;
 
   const {
     register,
@@ -99,7 +100,6 @@ function ProjectDetail() {
       .finally(() => setLoading(false));
   }, [id, reset]);
 
-  // Owner check — same pattern as ClientDetail
   const ownerId = project?.user?._id ?? project?.user ?? null;
   const isOwner =
     currentUserId && ownerId

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import clientService from "../../../services/clients";
 import projectService from "../../../services/projects";
+import { AuthContext } from "../../../contexts/AuthStore";
 import "./ClientDetail.css";
 
 function getInitials(name = "") {
@@ -47,7 +48,8 @@ function ClientDetail() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Auth: get the current user
-  const currentUserId = null; // TODO: replace with auth user id
+  const { user } = useContext(AuthContext);
+  const currentUserId = user?.id ?? null;
 
   const {
     register,
@@ -194,7 +196,7 @@ function ClientDetail() {
         </div>
 
         <div className="detail-actions">
-          {!isEditing  && (
+          {!isEditing && isOwner && (
             <button className="btn-edit" onClick={handleEditClick}>
               <span>✎ Edit client</span>
             </button>

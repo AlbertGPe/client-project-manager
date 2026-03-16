@@ -9,7 +9,7 @@ module.exports.list = (req, res, next) => {
 };
 
 module.exports.create = (req, res, next) => {
-  req.body.user = req.user.id;
+  req.body.user = req.user?.id
   Project.create(req.body)
     .then((project) => res.status(201).json(project))
     .catch(next);

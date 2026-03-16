@@ -6,6 +6,11 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
+      required: "Name is required",
+      minlength: [3, "Name needs at least 3 characters"]
+    },
+    username: {
+      type: String,
       required: "User name is required",
       unique: true,
       minlength: [3, "User name needs at least 3 characters"],
@@ -24,7 +29,7 @@ const userSchema = new Schema(
     },
     confirm: { //TODO EMAIL CONFIRMATION EXPIRATION
       type: Boolean,
-      default: true, //TODO PUT VALUE TO FALSE AT THE END OF THE PROJECT
+      default: process.env.USER_CONFIRMATION_REQUIRED ===  'false', //TODO PUT VALUE TO FALSE AT THE END OF THE PROJECT
     },
     role: {
       type: String,

@@ -47,5 +47,10 @@ clientSchema.virtual('projects', {
   count: true
 });
 
+clientSchema.pre('deleteOne', { document: true, query: false }, async function () {
+  const Project = mongoose.model('Project');
+  await Project.deleteMany({ client: this._id });
+});
+
 const Client = mongoose.model("Client", clientSchema);
 module.exports = Client;

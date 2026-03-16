@@ -11,12 +11,13 @@ import ClientDetailPage from "./pages/ClientDetailPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import CreateProjectPage from "./pages/CreateProjectPage";
 import AuthStore from "./contexts/AuthStore";
+import PrivateRoute from "./guards/PrivateRoute";
 
 function App() {
   return (
-    <>
-      <AuthStore>
-        <Routes>
+    <AuthStore>
+      <Routes>
+        <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
@@ -26,14 +27,14 @@ function App() {
             <Route path="/clients/:id" element={<ClientDetailPage />} />
             <Route path="/projects/:id" element={<ProjectDetailPage />} />
           </Route>
+        </Route>
 
-          <Route element={<AuthLayout />}>
-            <Route path="/auth/register" element={<RegisterPage />} />
-            <Route path="/auth/login" element={<LoginPage />} />
-          </Route>
-        </Routes>
-      </AuthStore>
-    </>
+        <Route element={<AuthLayout />}>
+          <Route path="/auth/register" element={<RegisterPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+        </Route>
+      </Routes>
+    </AuthStore>
   );
 }
 

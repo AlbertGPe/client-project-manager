@@ -3,15 +3,17 @@ const mailer = require("../config/mailer.config");
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 
+const studentConfirmationEmail = process.env.USER_CONFIRMATION_REQUIRED === 'true'
+
 module.exports.create = (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { username, name, email, password } = req.body;
 
   const duplicateErrors = {};
 
   // Verify all unique fields in parallel using Promise.all
   Promise.all([
     User.findOne({ email: email.toLowerCase() }),
-    User.findOne({ name: name }),
+    User.findOne({ username: username }),
   ])
     .then(([existingEmailUser, existingNameUser]) => {
       if (existingEmailUser) {
@@ -20,7 +22,7 @@ module.exports.create = (req, res, next) => {
       }
 
       if (existingNameUser) {
-        duplicateErrors.name =
+        duplicateErrors.username =
           "This username is already taken. Please choose a different one.";
       }
 
@@ -33,12 +35,15 @@ module.exports.create = (req, res, next) => {
 
       return User.create({
         name,
+        username,
         email: email.toLowerCase(),
         password,
       });
     })
     .then((user) => {
-      mailer.sendConfirmationEmail(user)
+      if (studentConfirmationEmail) {
+        mailer.sendConfirmationEmail(user)
+      }
       res.status(201).json(user);
     })
     .catch(next);
@@ -56,7 +61,7 @@ module.exports.confirm = (req, res, next) => {
 };
 
 module.exports.login = (req, res, next) => {
-  User.findOne({ name: req.body.name })
+  User.findOne({ username: req.body.username })
     .then((user) => {
       if (!user) {
         return next(createError(401, "Invalid credentials"));
@@ -72,7 +77,7 @@ module.exports.login = (req, res, next) => {
         }
 
         const token = jwt.sign({ sub: user.id }, process.env.TOKEN);
-        res.json({ token });
+        res.json({ token, ...user.toJSON() });
       });
     })
     .catch(next);
