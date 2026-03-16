@@ -1,17 +1,42 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, useLocation } from 'react-router-dom'
-import './UsersLogin.css'
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "./UsersLogin.css";
+import userService from "../../../services/users";
+import { AuthContext } from "../../../contexts/AuthStore";
 
 function UsersLogin() {
-  const { register, handleSubmit, formState: { errors } } = useForm({ mode: 'onBlur' })
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({ mode: "onBlur" });
+  const [serverError, setServerError] = useState(undefined);
   const location = useLocation();
+  const navigate = useNavigate();
   const successMessage = location.state?.message;
+  const { onUserChange } = useContext(AuthContext)
 
-  const onLoginSubmit = (credentials) => {
-    // TODO: connect to auth API)
-    console.log(credentials)
-  }
+  const onLoginSubmit = async (user) => {
+    try {
+      setServerError();
+      user = await userService.login(user);
+      onUserChange(user)
+      navigate("/");
+    } catch (error) {
+      const errors = error.response?.data?.errors;
+      if (errors) {
+        console.error(error.message, errors);
+        Object.keys(errors).forEach((error) =>
+          setError(error, { message: errors[error] }),
+        );
+      } else {
+        console.error(error);
+        setServerError(error.response?.data?.message ?? error.message);
+      }
+    }
+  };
 
   return (
     <div className="register-page">
@@ -20,12 +45,13 @@ function UsersLogin() {
 
         <div className="register-brand">
           <h1 className="register-headline">
-            Welcome<br />
+            Welcome
+            <br />
             back. <em>Let's work.</em>
           </h1>
           <p className="register-tagline">
-            Your clients, projects, and pipeline are waiting.
-            Sign in and pick up right where you left off.
+            Your clients, projects, and pipeline are waiting. Sign in and pick
+            up right where you left off.
           </p>
         </div>
 
@@ -51,54 +77,51 @@ function UsersLogin() {
 
       <div className="register-right">
         <div className="register-form-wrapper">
-
-        {successMessage && (
-          <div className="success-message">
-            ✅ {successMessage}
-          </div>
-        )}
+          {successMessage && (
+            <div className="success-message">✅ {successMessage}</div>
+          )}
 
           <div className="form-header">
             <h2>Sign in to your account</h2>
             <p>Enter your credentials to access your workspace.</p>
           </div>
 
-          <form className="register-form" onSubmit={handleSubmit(onLoginSubmit)}>
-
+          <form
+            className="register-form"
+            onSubmit={handleSubmit(onLoginSubmit)}
+          >
             <div className="field-group">
-              <label className="field-label" htmlFor="email">Email address</label>
+              <label className="field-label" htmlFor="name">
+                Username
+              </label>
               <input
-                id="email"
-                type="email"
+                id="username"
+                type="text"
                 placeholder=""
-                className={`field-input ${errors.email ? 'is-invalid' : ''}`}
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^\S+@\S+\.\S+$/,
-                    message: 'Please enter a valid email'
-                  }
-                })}
+                className={`field-input ${errors.username ? "is-invalid" : ""}`}
+                {...register("username", { required: "Username is required" })}
               />
               <span className="field-underline" />
               {errors.email && (
-                <span className="field-error">{errors.email.message}</span>
+                <span className="field-error">{errors.username.message}</span>
               )}
             </div>
 
             <div className="field-group">
-              <label className="field-label" htmlFor="password">Password</label>
+              <label className="field-label" htmlFor="password">
+                Password
+              </label>
               <input
                 id="password"
                 type="password"
                 placeholder=""
-                className={`field-input ${errors.password ? 'is-invalid' : ''}`}
-                {...register('password', {
-                  required: 'Password is required',
+                className={`field-input ${errors.password ? "is-invalid" : ""}`}
+                {...register("password", {
+                  required: "Password is required",
                   minLength: {
                     value: 8,
-                    message: 'At least 8 characters required'
-                  }
+                    message: "At least 8 characters required",
+                  },
                 })}
               />
               <span className="field-underline" />
@@ -107,6 +130,13 @@ function UsersLogin() {
               )}
             </div>
 
+            {serverError && (
+              <div className="server-error">
+                <span>⚠</span>
+                {serverError}
+              </div>
+            )}
+
             <div className="login-forgot">
               <Link to="/auth/forgot-password">Forgot your password?</Link>
             </div>
@@ -114,18 +144,16 @@ function UsersLogin() {
             <button type="submit" className="btn-register">
               <span>Sign in</span>
             </button>
-
           </form>
 
           <p className="register-footer">
-            Don't have an account yet?{' '}
+            Don't have an account yet?{" "}
             <Link to="/auth/register">Create one</Link>
           </p>
-
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default UsersLogin
+export default UsersLogin;

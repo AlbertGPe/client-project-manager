@@ -1,13 +1,32 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthStore";
 
-// activeNavLink: tells React Router to apply 'nav-link active' to the
-// current route, and 'nav-link' to all others.
-// The CSS handles the gold border + background for the active state.
 const activeNavLink = ({ isActive }) =>
   isActive ? "nav-link active" : "nav-link";
 
+function getInitials(name = "") {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
 function Navbar() {
+  const { user, onUserChange } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    onUserChange();
+    navigate("/auth/login");
+  }
+
+  const displayName = user?.name ?? user?.username ?? "User";
+  const initials = getInitials(displayName);
+
   return (
     <div className="sidenav">
       <div className="sidenav-brand">
@@ -48,17 +67,16 @@ function Navbar() {
         </ul>
       </nav>
 
-      {/*
-        TODO: replace hardcoded name/role/initials with data from
-        auth context.
-      */}
       <div className="sidenav-footer">
-        <div className="user-avatar">AG</div>
+        <div className="user-avatar">{initials}</div>
         <div className="user-info">
-          <span className="user-name">Albert Garcia</span>
+          <span className="user-name">{displayName}</span>
           <span className="user-role">Admin</span>
         </div>
         <div className="user-status" title="Online" />
+        <button className="logout-btn" onClick={handleLogout} title="Sign out">
+          ⇥
+        </button>
       </div>
     </div>
   );
