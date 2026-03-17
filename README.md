@@ -218,26 +218,35 @@ npm start
 
 Suggested screenshots to include:
 
-
+* Login page
+  
 <img width="1918" height="944" alt="Login" src="https://github.com/user-attachments/assets/0cfd4db5-d109-4498-81f7-02db2393097f" />
 
+
+* Dashboard with KPIs
+  
 <img width="2796" height="1266" alt="Home" src="https://github.com/user-attachments/assets/fd400bce-0c2d-44b8-b2a3-5638b22ccd1e" />
+
+
+* Clients list page
 
 <img width="2800" height="1266" alt="Clients" src="https://github.com/user-attachments/assets/e1547fdf-967f-41e4-8f53-5b63aa8b7796" />
 
+
+* Client detail page with projects
+
 <img width="2813" height="1268" alt="ClientDetail" src="https://github.com/user-attachments/assets/6ac923d4-97d0-44fa-a8e9-4b8cc1c4e641" />
+
+
+* Projects page with filters
 
 <img width="2794" height="1266" alt="Projects" src="https://github.com/user-attachments/assets/18fb2c0b-ca60-4913-be66-e2fdbf1e1e72" />
 
+
+* Project detail page
+
 <img width="2812" height="1262" alt="ProjectDetail" src="https://github.com/user-attachments/assets/f4b598f9-3d22-4f1a-8eb3-475d1b6ac6ef" />
 
-
-* Login page
-* Dashboard with KPIs
-* Clients list page
-* Client detail page with projects
-* Projects page with filters
-* Project detail page
 
 ---
 
