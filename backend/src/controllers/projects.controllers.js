@@ -1,5 +1,4 @@
 const Project = require("../models/project.model");
-const Client = require("../models/client.model");
 
 module.exports.list = (req, res, next) => {
   Project.find()

@@ -4,6 +4,7 @@ const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
 
 const studentConfirmationEmail = process.env.USER_CONFIRMATION_REQUIRED === 'true'
+const maxSessionTime = parseInt(process.env.MAX_SESSION_TIME) || 3600;
 
 module.exports.create = (req, res, next) => {
   const { username, name, email, password } = req.body;
@@ -76,7 +77,7 @@ module.exports.login = (req, res, next) => {
           return next(createError(401, "Invalid credentials"));
         }
 
-        const token = jwt.sign({ sub: user.id }, process.env.TOKEN);
+        const token = jwt.sign({ sub: user.id, exp: (Date.now() / 1000) + maxSessionTime }, process.env.TOKEN);
         res.json({ token, ...user.toJSON() });
       });
     })

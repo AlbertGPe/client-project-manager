@@ -1,36 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const projects = require('../controllers/pojects.controllers')
+const projects = require('../controllers/projects.controllers')
 const projectsMid = require('../middlewares/projects.mid')
 const secureMid = require('../middlewares/secure.mid')
 
 router.get('/projects',
   secureMid.auth, 
-  projects.list) //NEED JWT (done)
+  projects.list)
 
 router.get('/projects/client/:clientId', 
   secureMid.auth,
-  projects.listByClient) //NEED JWT
+  projects.listByClient)
 
 router.get('/projects/:id',
   secureMid.auth,
   projectsMid.exists,
-  projects.detail) //NEED JWT (done)
+  projects.detail)
 
 router.post('/projects',
   secureMid.auth,
-  projects.create) //NEED JWT (done)
+  projects.create)
 
 router.patch('/projects/:id',
   secureMid.auth,
   projectsMid.exists,
   projectsMid.checkUser,
-  projects.update) //NEED JWT (done) - NEED OWNER (done)
+  projects.update)
 
 router.delete('/projects/:id',
   secureMid.auth, 
   projectsMid.exists,
   projectsMid.checkUser, 
-  projects.delete) //NEED JWT (done) - NEED OWNER (done)
+  projects.delete)
 
 module.exports = router;

@@ -28,9 +28,6 @@ module.exports.delete = (req, res, next) => {
 
 module.exports.update = (req, res, next) => {
   delete req.body.user;
-  // if(req.body.user) {
-  //   return  next(createError(401, "You can't modify the User"));
-  // }
 
   if (Object.keys(req.body).length === 0) {
     return next(createError(400, "Fill at least 1 camp"));

@@ -7,27 +7,27 @@ const secureMid = require('../middlewares/secure.mid')
 
 router.get('/clients',
   secureMid.auth, 
-  clients.list) //NEED JWT
+  clients.list)
 
 router.get('/clients/:id',
   secureMid.auth, 
   clientsMid.exists, 
-  clients.detail) //NEED JWT (done)
+  clients.detail) 
 
 router.post('/clients', 
   secureMid.auth, 
-  clients.create) //NEED JWT (done)
+  clients.create)
 
 router.patch('/clients/:id', 
   secureMid.auth, 
   clientsMid.exists, 
   clientsMid.checkUser,
-  clients.update) //NEED JWT(done) - NEED OWNER (done)
+  clients.update)
 
 router.delete('/clients/:id', 
   secureMid.auth,
   clientsMid.exists,
   clientsMid.checkUser, 
-  clients.delete) //NEED JWT(done) - NEED OWNER (done) 
+  clients.delete) 
 
 module.exports = router;
