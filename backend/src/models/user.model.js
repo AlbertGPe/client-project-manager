@@ -29,7 +29,7 @@ const userSchema = new Schema(
     },
     confirm: { //TODO EMAIL CONFIRMATION EXPIRATION
       type: Boolean,
-      default: process.env.USER_CONFIRMATION_REQUIRED ===  'false', //TODO PUT VALUE TO FALSE AT THE END OF THE PROJECT
+      default: process.env.USER_CONFIRMATION_REQUIRED ===  'false',
     },
     role: {
       type: String,
