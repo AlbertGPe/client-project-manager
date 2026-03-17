@@ -35,7 +35,6 @@ function UsersRegister() {
       } else {
         console.error(error);
         setServerError(error.message);
-        //TODO REDIRECT OR SHOW A GOOD MESSAGE
       }
     }
   };

@@ -52,15 +52,15 @@ function ClientsList() {
       .finally(() => setLoading(false));
   }, []);
 
-  // useMemo ensures we don't re-filter on every unrelated re-render.
+  // useMemo ensures not re-filter on every unrelated re-render.
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     if (!q) return clients;
     return clients.filter(
-      (c) =>
-        c.name?.toLowerCase().includes(q) ||
-        c.email?.toLowerCase().includes(q) ||
-        c.company?.toLowerCase().includes(q),
+      (client) =>
+        client.name?.toLowerCase().includes(q) ||
+        client.email?.toLowerCase().includes(q) ||
+        client.company?.toLowerCase().includes(q),
     );
   }, [clients, search]);
 

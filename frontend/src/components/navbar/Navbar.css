@@ -258,6 +258,8 @@ body {
   margin-left: var(--nav-width);
   min-height: 100vh;
   background-color: var(--bg-dark);
+  width: calc(100% - var(--nav-width));
+  box-sizing: border-box;
 }
 
 @keyframes navSlideIn {

@@ -47,7 +47,6 @@ function ClientDetail() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Auth: get the current user
   const { user } = useContext(AuthContext);
   const currentUserId = user?.id ?? null;
 

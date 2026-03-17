@@ -82,7 +82,6 @@ function HomePage() {
     clientService
       .list()
       .then((clients) => {
-        console.log('Clients received:', clients);
         setClients(clients);
       })
       .catch((error) => console.error(error));

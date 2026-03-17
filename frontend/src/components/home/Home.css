@@ -31,7 +31,6 @@
   color: var(--text-primary);
   padding: 3rem 3rem 3rem 3rem;
   box-sizing: border-box;
-  max-width: 1100px;
 }
 
 .home-header {
