@@ -230,7 +230,9 @@ Suggested screenshots to include:
 
 * Clients list page
 
-<img width="2800" height="1266" alt="Clients" src="https://github.com/user-attachments/assets/e1547fdf-967f-41e4-8f53-5b63aa8b7796" />
+<img width="2396" height="1251" alt="Clients" src="https://github.com/user-attachments/assets/58f075c7-549a-4fa6-bc56-47bda8af4539" />
+
+<img width="2396" height="1250" alt="Clients2" src="https://github.com/user-attachments/assets/e73c306d-c310-40ef-a45b-d8d6dacea83a" />
 
 
 * Client detail page with projects
@@ -240,13 +242,18 @@ Suggested screenshots to include:
 
 * Projects page with filters
 
-<img width="2794" height="1266" alt="Projects" src="https://github.com/user-attachments/assets/18fb2c0b-ca60-4913-be66-e2fdbf1e1e72" />
+<img width="2396" height="1245" alt="Projects" src="https://github.com/user-attachments/assets/91c8fe9c-8ec2-4955-96c2-9f6c6037707e" />
+
+<img width="2627" height="1276" alt="Projects" src="https://github.com/user-attachments/assets/92906de3-67d5-4282-a115-fbbda07c67da" />
 
 
 * Project detail page
 
 <img width="2812" height="1262" alt="ProjectDetail" src="https://github.com/user-attachments/assets/f4b598f9-3d22-4f1a-8eb3-475d1b6ac6ef" />
 
+* Edit page
+
+<img width="2491" height="1271" alt="Modify" src="https://github.com/user-attachments/assets/59f67e85-8e6a-4a5d-b19c-887209cd8a2f" />
 
 ---
 
