@@ -169,6 +169,34 @@
   width: 100%;
 }
 
+.mine-filter-btn {
+  padding: 0.4rem 0.85rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  color: var(--text-muted, #5a5f72);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+ 
+.mine-filter-btn:hover {
+  color: var(--text-primary, #eeeae3);
+  border-color: rgba(255,255,255,0.15);
+}
+ 
+.mine-filter-btn.active-filter {
+  border-color: var(--accent, #c8a96e);
+  color: var(--accent, #c8a96e);
+  background: rgba(200, 169, 110, 0.08);
+}
+
 .view-toggle {
   display: flex;
   gap: 0.25rem;

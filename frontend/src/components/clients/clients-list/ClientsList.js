@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import clientService from "../../../services/clients";
 import ClientItem from "../client-item/ClientItem";
 import "./ClientsList.css";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../contexts/AuthStore";
 
 // Users visual feedback that content is loading
 function SkeletonCards() {
@@ -39,9 +40,13 @@ function SkeletonCards() {
 }
 
 function ClientsList() {
+  const { user } = useContext(AuthContext);
+  const currentUserId = user?.id ?? null;
+
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [onlyMine, setOnlyMine] = useState(false);
   const [view, setView] = useState("grid");
 
   useEffect(() => {
@@ -54,15 +59,27 @@ function ClientsList() {
 
   // useMemo ensures not re-filter on every unrelated re-render.
   const filtered = useMemo(() => {
-    const q = search.toLowerCase().trim();
-    if (!q) return clients;
-    return clients.filter(
-      (client) =>
-        client.name?.toLowerCase().includes(q) ||
-        client.email?.toLowerCase().includes(q) ||
-        client.company?.toLowerCase().includes(q),
-    );
-  }, [clients, search]);
+    let result = clients;
+
+    if (onlyMine && currentUserId) {
+      result = result.filter(
+        (client) =>
+          String(client.user) === currentUserId ||
+          String(client.user?.id) === currentUserId,
+      );
+    }
+
+    const searched = search.toLowerCase().trim();
+    if (searched) {
+      result = result.filter(
+        (client) =>
+          client.name?.toLowerCase().includes(searched) ||
+          client.email?.toLowerCase().includes(searched) ||
+          client.company?.toLowerCase().includes(searched),
+      );
+    }
+    return result;
+  }, [clients, search, onlyMine, currentUserId]);
 
   return (
     <div className="clients-page">
@@ -70,7 +87,7 @@ function ClientsList() {
         <div className="clients-header-left">
           <p className="clients-header-label">Management</p>
           <h1 className="clients-header-title">
-            Your <em>clients.</em>
+            <em>Clients</em>
           </h1>
           {!loading && (
             <span className="clients-count-badge">
@@ -96,6 +113,14 @@ function ClientsList() {
           />
           <span className="clients-search-underline" />
         </div>
+
+        <button
+          className={`mine-filter-btn ${onlyMine ? "active-filter" : ""}`}
+          onClick={() => setOnlyMine((v) => !v)}
+          title="Show only your clients"
+        >
+          ◈ Mine
+        </button>
 
         <div className="view-toggle">
           <button

@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { Link } from "react-router-dom";
 import projectService from "../../../services/projects";
 import ProjectItem from "../project-item/ProjectItem";
+import { AuthContext } from "../../../contexts/AuthStore";
 import "./ProjectsList.css";
 
 const STATE_FILTERS = [
@@ -57,10 +58,14 @@ function SkeletonCards() {
 }
 
 function ProjectsList() {
+  const { user } = useContext(AuthContext);
+  const currentUserId = user?.id ?? null;
+
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [stateFilter, setStateFilter] = useState("all");
+  const [onlyMine, setOnlyMine] = useState(false);
   const [view, setView] = useState("grid");
 
   useEffect(() => {
@@ -73,6 +78,14 @@ function ProjectsList() {
 
   const filtered = useMemo(() => {
     let result = projects;
+
+    if (onlyMine && currentUserId) {
+      result = result.filter(
+        (project) =>
+          String(project.user) === currentUserId ||
+          String(project.user?.id) === currentUserId,
+      );
+    }
 
     if (stateFilter !== "all") {
       result = result.filter((project) => project.state === stateFilter);
@@ -89,7 +102,7 @@ function ProjectsList() {
     }
 
     return result;
-  }, [projects, search, stateFilter]);
+  }, [projects, search, stateFilter, onlyMine, currentUserId]);
 
   return (
     <div className="projects-page">
@@ -97,7 +110,7 @@ function ProjectsList() {
         <div>
           <p className="projects-header-label">Management</p>
           <h1 className="projects-header-title">
-            Your <em>projects.</em>
+            <em>Projects</em>
           </h1>
           {!loading && (
             <span className="projects-count-badge">
@@ -138,6 +151,14 @@ function ProjectsList() {
           ))}
         </div>
 
+         <button
+          className={`mine-filter-btn ${onlyMine ? "active-filter" : ""}`}
+          onClick={() => setOnlyMine((v) => !v)}
+          title="Show only your projects"
+        >
+          ◈ Mine
+        </button>
+
         <div className="view-toggle">
           <button
             className={`view-toggle-btn ${view === "grid" ? "active" : ""}`}
@@ -155,7 +176,6 @@ function ProjectsList() {
           </button>
         </div>
       </div>
-
 
       {loading && <SkeletonCards />}
 
