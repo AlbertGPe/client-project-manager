@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import clientService from "../../../services/clients";
@@ -28,7 +28,9 @@ function ProjectCreate() {
   const [selectedState, setSelectedState] = useState("pending");
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState(null);
-  const [descLen, setDescLen] = useState(0);
+
+  const [clientSearch, setClientSearch] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const { user } = useContext(AuthContext);
   const currentUserId = user?.id ?? null;
@@ -40,6 +42,55 @@ function ProjectCreate() {
     setError,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
+
+  const dropdownRef = useRef(null);
+
+  const isOwnerOf = (client) =>
+    String(client.user) === currentUserId ||
+    String(client.user?.id) === currentUserId;
+
+  const filteredClients = useMemo(() => {
+    const q = clientSearch.toLowerCase().trim();
+    if (!q) return clients;
+    return clients.filter(
+      (c) =>
+        c.name?.toLowerCase().includes(q) ||
+        c.company?.toLowerCase().includes(q),
+    );
+  }, [clients, clientSearch]);
+
+  const myClients = filteredClients.filter(isOwnerOf);
+  const otherClients = filteredClients.filter((c) => !isOwnerOf(c));
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function handleClientSelect(client) {
+    setSelectedClientId(client.id);
+    setClientSearch(
+      client.name + (client.company ? ` — ${client.company}` : ""),
+    );
+    setShowDropdown(false);
+  }
+
+  function handleClientInputChange(e) {
+    setClientSearch(e.target.value);
+    setSelectedClientId(""); // reset selection when typing
+    setOwnershipStatus(null);
+    setShowDropdown(true);
+  }
+
+  function handleClientInputFocus() {
+    setShowDropdown(true);
+  }
 
   const nameValue = watch("name", "");
   const descValue = watch("description", "");
@@ -66,7 +117,7 @@ function ProjectCreate() {
         setOwnershipStatus(allowed ? "allowed" : "forbidden");
       })
       .catch(() => setOwnershipStatus("forbidden"));
-  }, [selectedClientId]);
+  }, [selectedClientId, currentUserId]);
 
   useEffect(() => {
     const preselected = searchParams.get("client");
@@ -137,24 +188,90 @@ function ProjectCreate() {
 
             <div className="edit-field-group">
               <label className="edit-field-label">Client *</label>
-              <div className="client-select-wrapper">
-                <select
-                  className="client-select"
-                  value={selectedClientId}
-                  onChange={(e) => setSelectedClientId(e.target.value)}
-                  disabled={clientsLoading}
-                >
-                  <option value="">
-                    {clientsLoading ? "Loading clients…" : "Select a client…"}
-                  </option>
-                  {clients.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                      {c.company ? ` — ${c.company}` : ""}
-                    </option>
-                  ))}
-                </select>
-                <span className="client-select-arrow">▾</span>
+              <div className="client-combobox" ref={dropdownRef}>
+                <div className="client-select-wrapper">
+                  <input
+                    type="text"
+                    className="client-search-input"
+                    placeholder={
+                      clientsLoading
+                        ? "Loading clients…"
+                        : "Search or select a client…"
+                    }
+                    value={clientSearch}
+                    onChange={handleClientInputChange}
+                    onFocus={handleClientInputFocus}
+                    disabled={clientsLoading}
+                    autoComplete="off"
+                  />
+                  <span className="client-select-arrow">
+                    {showDropdown ? "▴" : "▾"}
+                  </span>
+                </div>
+
+                {showDropdown && filteredClients.length > 0 && (
+                  <div className="client-dropdown">
+                    {myClients.length > 0 && (
+                      <>
+                        <div className="client-dropdown-group-label">
+                          ◈ My clients
+                        </div>
+                        {myClients.map((client) => (
+                          <button
+                            key={client.id}
+                            type="button"
+                            className="client-dropdown-option mine"
+                            onMouseDown={() => handleClientSelect(client)}
+                          >
+                            <span className="client-dropdown-mark">◈</span>
+                            <span className="client-dropdown-name">
+                              {client.name}
+                            </span>
+                            {client.company && (
+                              <span className="client-dropdown-company">
+                                {client.company}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+                      </>
+                    )}
+                    {otherClients.length > 0 && (
+                      <>
+                        <div className="client-dropdown-group-label">
+                          Other clients
+                        </div>
+                        {otherClients.map((client) => (
+                          <button
+                            key={client.id}
+                            type="button"
+                            className="client-dropdown-option"
+                            onMouseDown={() => handleClientSelect(client)}
+                          >
+                            <span className="client-dropdown-name">
+                              {client.name}
+                            </span>
+                            {client.company && (
+                              <span className="client-dropdown-company">
+                                {client.company}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {showDropdown &&
+                  clientSearch &&
+                  filteredClients.length === 0 && (
+                    <div className="client-dropdown">
+                      <div className="client-dropdown-empty">
+                        No clients match "{clientSearch}"
+                      </div>
+                    </div>
+                  )}
               </div>
 
               {ownershipStatus === "checking" && (

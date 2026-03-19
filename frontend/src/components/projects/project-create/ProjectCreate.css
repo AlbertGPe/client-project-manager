@@ -105,16 +105,16 @@
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.client-select-wrapper {
+.client-combobox {
   position: relative;
 }
 
-.client-select {
+.client-search-input {
   width: 100%;
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: 0.65rem 0;
+  padding: 0.65rem 1.5rem 0.65rem 0;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.875rem;
   font-weight: 300;
@@ -123,13 +123,90 @@
   caret-color: var(--accent, #c8a96e);
   box-sizing: border-box;
   transition: border-color 0.2s ease;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
+  -webkit-text-fill-color: var(--text-primary, #eeeae3);
 }
 
-.client-select:focus  { border-bottom-color: var(--accent, #c8a96e); }
-.client-select option { background: #11131a; color: var(--text-primary, #eeeae3); }
+.client-search-input::placeholder { color: var(--text-muted, #5a5f72); }
+.client-search-input:focus         { border-bottom-color: var(--accent, #c8a96e); }
+.client-search-input:disabled      { opacity: 0.5; cursor: not-allowed; }
+
+.client-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #0f1117;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+  z-index: 50;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  animation: fadeSlideUp 0.15s ease both;
+}
+
+.client-dropdown-group-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted, #5a5f72);
+  font-weight: 500;
+  padding: 0.65rem 1rem 0.35rem;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.client-dropdown-group-label:first-child { border-top: none; }
+
+.client-dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.client-dropdown-option:hover      { background: rgba(255,255,255,0.04); }
+.client-dropdown-option.mine:hover { background: rgba(200,169,110,0.06); }
+
+.client-dropdown-mark {
+  font-size: 0.65rem;
+  color: var(--accent, #c8a96e);
+  flex-shrink: 0;
+}
+
+.client-dropdown-name {
+  font-size: 0.875rem;
+  color: var(--text-primary, #eeeae3);
+  font-weight: 300;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-dropdown-company {
+  font-size: 0.72rem;
+  color: var(--text-muted, #5a5f72);
+  flex-shrink: 0;
+}
+
+.client-dropdown-empty {
+  padding: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted, #5a5f72);
+  font-style: italic;
+  text-align: center;
+}
+
+.client-select-wrapper {
+  position: relative;
+}
 
 .client-select-arrow {
   position: absolute;
