@@ -137,9 +137,9 @@ function UsersLogin() {
               </div>
             )}
 
-            <div className="login-forgot">
+            {/*<div className="login-forgot">
               <Link to="/auth/forgot-password">Forgot your password?</Link>
-            </div>
+            </div>*/}
 
             <button type="submit" className="btn-register">
               <span>Sign in</span>
