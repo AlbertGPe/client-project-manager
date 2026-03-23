@@ -257,6 +257,14 @@ Suggested screenshots to include:
 
 ---
 
+## Demo
+- **App:** https://client-project-manager-dusky.vercel.app
+- **API:** https://client-project-manager-production.up.railway.app/api/v1
+
+## Deployment
+- Frontend: React (Vercel)
+- Backend: Node.js + Express (Railway)
+
 # Author
 
 Albert Garcia Pedrosa
